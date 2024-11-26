@@ -6,6 +6,9 @@
   "engines": {
     "vscode": "^1.82.2"
   },
+  "author": {
+    "name": "pure"
+  },
   "categories": [
     "Other"
   ],

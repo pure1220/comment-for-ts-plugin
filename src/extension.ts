@@ -24,19 +24,23 @@ function generateComment(interfaceOrTypeText: string): string {
   // 根据提取的信息生成注释
   const lines = interfaceOrTypeText.split('\n');
 
-  const commentsLines = lines.map((line) => {
-    if (line.trim().startsWith('//')) {
+  let commentsLines = lines.map((line) => {
+    // 导出的第一句话 不需要翻译注释 直接返回注释前缀
+    if (line.includes('export')) {
+      return '/**\n * @description:';
+    } else if (line.trim().startsWith('//')) {
       // 保留原有注释
       return line;
     } else if (line.includes(':')) {
-      const [property, type] = line.split(':');
-      return ` * @param { ${type.trim()} } ${property.trim()}`;
+      let [property, type] = line.split(':');
+      // 可选参数
+      return ` * @param { ${type.trim()} } ${property.trim().replace('?', '')}`;
     } else {
       return ` * ${line.trim()}`;
     }
   });
 
-  const comments = `/**\n * @description:\n${commentsLines.join('\n')}\n */\n${lines.join('\n')}`;
+  const comments = `${commentsLines.join('\n')}\n */\n${lines.join('\n')}`;
 
   return comments;
 }
